@@ -1,0 +1,31 @@
+---
+<%
+  # your image location will differ
+  image="/scratch/shared/ood_images/irb-ood/"
+%>
+
+script:
+  native: # ... array of command line arguments ...
+    - "-c"
+    - "<%= cores.blank? ? 1 : cores.to_i %>"
+    - "--mem-per-cpu"
+    - "<%= memory %>"
+##    <% if gpu.to_i != 0 %>
+##    - "--gres=gpu:<%= gpu %>"
+##    <% end %>
+
+batch_connect:
+  template: vnc
+  websockify_cmd: '/usr/bin/websockify'
+  script_wrapper: |
+    cat << "CTRSCRIPT" > container.sh
+    export PATH="$PATH:/opt/TurboVNC/bin"
+    %s  
+    CTRSCRIPT
+
+    # your bindpath will differ
+    #export SINGULARITY_BINDPATH="$HOME,/var,/run,/etc/hostname,/scratch,/apps,/usr/lib64/lua/5.3,/usr/share/lua/5.3,/lib64/libtcl8.6.so,/usr/lib64/tcl8.6,/usr/lib64/tclConfig.sh,/usr/bin/tclsh,/usr/bin/tclsh8.6,/usr/share/tcl8,/usr/share/tcl8.6,/tmp:$TMPDIR"
+    export SINGULARITY_BINDPATH="$HOME,/var,/run,/etc/hostname,/scratch,/apps,/tmp:$TMPDIR"
+    #module load Singularity ##FB 1/24 installed Singularity is on more newer version tahn in easybuild module
+    #singularity run <%= image %> /bin/bash container.sh
+    /bin/bash container.sh

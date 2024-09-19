@@ -1,0 +1,59 @@
+---
+cluster: "irb_cluster"
+attributes:
+  desktop:
+    label: "Desktop Environment"
+    widget: select
+    options:
+#      - "gnome"
+#      - "kde"
+#      - "mate"
+      - "xfce"
+  bc_vnc_idle: 0
+  bc_vnc_resolution:
+    required: true
+  node_type: null
+  cores:
+    widget: "number_field"
+    max: 64
+    min: 1
+    step: 1
+    value: 1
+    label: "Number of cores"
+    help: "Enter a value between 1 and 64"
+  memory:
+    widget: "number_field"
+    max: 16000
+    min: 100
+    step: 1
+    value: 1024
+    label: "Memory per core (MB)"
+    help: "Enter a value in MB between 100 and 16000"
+ # gpu:
+ #  widget: "number_field"      
+ #  max: 0
+ #  min: 0
+ #  step: 0
+ #  value: 0
+ #  label: "Number of GPUs"  
+ #  help: "Ask for GPU if you need (temporary not available)"
+
+form:
+  - bc_vnc_idle
+  - desktop
+#  - bc_account
+  - bc_num_hours
+#  - bc_num_slots
+  - node_type
+#  - bc_queue
+  - bc_vnc_resolution
+#  - bc_email_on_started
+  - cores
+  - memory
+#  - gpu  
+
+
+
+
+
+

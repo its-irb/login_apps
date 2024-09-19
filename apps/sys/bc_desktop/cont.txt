@@ -1,0 +1,19 @@
+<%
+  # your image location will differ
+  image="/scratch/shared/ood_images/irb-ood"
+%>
+---
+script:
+  template: "vnc"
+batch_connect:
+  websockify_cmd: '/usr/bin/websockify'
+  script_wrapper: |
+    cat << "CTRSCRIPT" > container.sh
+    export PATH="$PATH:/opt/TurboVNC/bin"
+    %s  
+    CTRSCRIPT
+
+    # your bindpath will differ
+    export SINGULARITY_BINDPATH="$HOME,/fs,/srv,/var,/run,/tmp:$TMPDIR"
+    echo "hola"
+    singularity run <%= image %> /bin/bash echo "aloo"

@@ -1,0 +1,2 @@
+var a="ood_config";function n(){return document.getElementById(a).dataset}function c(){let t=n();if(t.maxFileSize.length==0)return parseInt(1073742e4,10);{let e=t.maxFileSize;return parseInt(e,10)}}function o(){return n().transfersPath}function r(){return n().jobsInfoPath}function s(){return document.querySelector('meta[name="csrf-token"]').content}function f(){let t=n();return JSON.parse(t.uppyLocale)}export{s as csrfToken,r as jobsInfoPath,c as maxFileSize,o as transfersPath,f as uppyLocale};
+//# sourceMappingURL=config.js.map
