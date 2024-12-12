@@ -1,0 +1,29 @@
+---
+
+script:
+  native: # ... array of command line arguments ...
+    - "--job-name"
+    - "<%= job_name %>" 
+    - "-N"
+    - "1" 
+    - "--ntasks"
+    - "1"
+    - "--partition=irb_cpu_iclk"
+    - "--distribution=block:block:block"   
+    - "--cpus-per-task"
+    - "<%= cores.blank? ? 1 : cores.to_i %>"  
+    - "--mem"
+    - "<%= memory %>G"
+    - "--qos=interactive"   
+
+batch_connect:
+    template: "basic"
+    conn_params: session_id
+    script_wrapper: |
+      cleanup() {
+        echo "Received SIGTERM, closing DCV session..."
+        dcv close-session $session_id
+      }
+
+      trap cleanup SIGTERM
+      %s

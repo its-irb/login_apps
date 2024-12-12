@@ -1,0 +1,28 @@
+<div>
+  <p>
+    In order to use DCV you first need to open a tunnel to the compute node.
+    Run the following command in your terminal, log in, and then launch DCV with the connect button.
+  </p>
+  <pre><code id="codeBlock" style="font-size: smaller;">
+    ssh -J irblogin01.irbbarcelona.pcb.ub.es -L 8443:localhost:8443 <%= host %>
+  </code>
+  <!--<button id="copyButton"><i class="fa fa-copy"></i></button>-->
+  </pre>
+</div>
+<script>
+  button = document.getElementById("copyButton")
+  code = document.getElementById("codeBlock")
+  button.addEventListener("click", async () => {
+      await copyCode(code);
+  });
+  async function copyCode(code) {
+    let text = code.innerText;
+
+    await navigator.clipboard.writeText(text);
+  }
+</script>
+<form action="dcv://localhost:8443#<%= session_id %>" method="post" target="_blank">
+  <button class="btn btn-primary" type="submit">
+    <i class="fa fa-desktop"></i> Connect to DCV
+  </button>
+</form>

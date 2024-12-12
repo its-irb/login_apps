@@ -1,0 +1,8 @@
+---
+name: DCV
+icon: fa://desktop
+category: Jobs
+subcategory: Desktops
+role: batch_connect
+description: |
+  Opens an Amazon DCV session on one of the nodes.
