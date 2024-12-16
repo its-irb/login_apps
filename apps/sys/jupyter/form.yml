@@ -1,0 +1,202 @@
+# Batch Connect app configuration file
+#
+# @note Used to define the submitted cluster, title, description, and
+#   hard-coded/user-defined attributes that make up this Batch Connect app.
+---
+
+# **MUST** set cluster id here that matches cluster configuration file located
+# under /etc/ood/config/clusters.d/*.yml
+# @example Use the Owens cluster at Ohio Supercomputer Center
+#     cluster: "owens"
+cluster: "irb_cluster"
+
+# Define attribute values that aren't meant to be modified by the user within
+# the Dashboard form
+attributes:
+  # Set the corresponding modules that need to be loaded for Jupyter to run
+  #
+  # @note It is called within the batch job as `module load <modules>` if
+  #   defined
+  # @example Do not load any modules
+  #     modules: ""
+  # @example Using default python module
+  #     modules: "python"
+  # @example Using specific python module
+  #     modules: "python/3.5"
+  # @example Using combination of modules
+  #     modules: "python/3.5 cuda/8.0.44"
+  modules: "python"
+
+  # Any extra command line arguments to feed to the `jupyter notebook ...`
+  # command that launches the Jupyter notebook within the batch job
+  extra_jupyter_args: ""
+
+# All of the attributes that make up the Dashboard form (in respective order),
+# and made available to the submit configuration file and the template ERB
+# files
+#
+# @note You typically do not need to modify this unless you want to add a new
+#   configurable value
+# @note If an attribute listed below is hard-coded above in the `attributes`
+#   option, then it will not appear in the form page that the user sees in the
+#   Dashboard
+
+  job_name:
+    widget: "text_field"
+    value: ""
+    label: "Job Name"
+
+  software:
+    widget: select
+    label: "Source of the software"
+    help: "This defines if you are going to use modeles or containers to load jupyter."
+    options:
+      - [ "module", "module", data-hide-container-value: true, data-hide-working-dir: true ]
+      - [ "container", "container" ]
+
+  container_value:
+    widget: "text_field"
+    value: ""
+    label: "Container path"
+    help: "Enter a full path and file for the container. In case of using dockerhub repo type in front docker://"
+
+  working_dir:
+    widget: "text_field"
+    value: ""
+    label: "Home directory"
+    help: "Enter a full path to use as home directory, where configuration files and session information are stored"
+
+  is_gpu:
+    widget: select
+    label: "Do you want to request a GPU?"
+    help: "Ensure that your jupyter image is configured to run on GPU"
+    options:
+      - [ "yes", "yes", data-hide-num-gpu: true, data-hide-partition-cpu: true, data-show-partition-gpu: true ]
+      - [ "no", "no", data-hide-num-gpu: true, data-hide-partition-gpu: true, data-show-partition-cpu: true  ]
+    
+  is_interactive:
+    widget: select
+    label: "QoS (quality of service)"
+    options:
+     - [
+         'interactive', 'interactive',
+         data-max-cores: 16,
+         data-max-memory: 256,
+         data-max-bc-num-hours: 24,
+         data-max-bc-num-gpu: 1
+       ]
+     - [
+         'regular', 'regular'
+       ]
+    help: "Run with _interactive_ QoS (more priority but constrained resources: 16 cores, 1 GPU, max_mem= 256G and 24h of timelimit)"
+
+  num_gpu:
+    widget: "number_field"
+    max: 1
+    min: 1
+    step: 1
+    value: 1
+    label: "Number of GPU"
+    help: "Number of GPU you want to allocate"
+
+  partition_gpu:
+    widget: select
+    label: "Partition"
+    options:
+     - [
+         'irb_gpu_3090', 'irb_gpu_3090',
+         data-max-cores: 8,
+         data-max-memory: 40
+       ]
+     - [
+         'spot_gpu', 'spot_gpu',
+         data-max-cores: 8,
+         data-max-memory: 40
+       ]
+     - [
+         'sbnb_gpu_3090', 'sbnb_gpu_3090',
+         data-max-cores: 32,
+         data-max-memory: 256
+       ]
+    help: "Choose a hardware partition"
+
+
+  partition_cpu:
+    widget: select
+    label: "Partition"
+    options:
+     - [
+         'irb_cpu_iclk', 'irb_cpu_iclk',
+         data-max-cores: 32,
+         data-max-memory: 512
+       ]
+     - [
+         'irb_cpu_sphr', 'irb_cpu_sphr',
+         data-max-cores: 64,
+         data-max-memory: 496
+       ]
+     - [
+         'irb_cpu_zen4', 'irb_cpu_zen4',
+         data-max-cores: 96,
+         data-max-memory: 2048
+       ]
+     - [
+         'bbg_cpu_zen4', 'bbg_cpu_zen4',
+         data-max-cores: 192,
+         data-max-memory: 750
+       ]  
+     - [
+         'spot_cpu', 'spot_cpu',
+         data-max-cores: 96,
+         data-max-memory: 1112
+       ]
+     - [
+         'sbnb_cpu_zen3', 'sbnb_cpu_zen3',
+         data-max-cores: 56,
+         data-max-memory: 512
+       ]
+     - [
+         'sbnb_cpu_sphr', 'sbnb_cpu_sphr',
+         data-max-cores: 64,
+         data-max-memory: 512
+       ]
+    help: "Choose a hardware partition"
+
+
+  cores:
+    widget: "number_field"
+    max: 32
+    min: 1
+    step: 1
+    value: 1
+    label: "Number of cores"
+    help: "CPU cores you want to allocate"  
+  
+  memory:
+    widget: "number_field"
+    max: 512
+    min: 1
+    step: 1
+    value: 1
+    label: "Total memory (GB)"
+    help: "Total memory in GB you want to allocate"
+    
+form:
+  - modules
+  - extra_jupyter_args
+#  - bc_account
+#  - bc_queue
+  - job_name
+  - software
+  - container_value
+  - working_dir
+  - is_gpu
+  - is_interactive  
+  - num_gpu
+  - bc_num_hours
+#  - bc_num_slots
+#  - bc_email_on_started
+  - partition_gpu
+  - partition_cpu  
+  - cores
+  - memory 
