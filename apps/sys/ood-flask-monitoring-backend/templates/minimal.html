@@ -1,0 +1,28 @@
+<script>
+    var jobs = JSON.parse('{{ jobs["jobs"] | tojson }}');
+    function updateGrafanaJobIframes(jobId) {
+    	var container = document.getElementById("grafanaJobPlots");
+    	container.innerHTML = '';
+	job = jobs.filter(function (entry) {
+           return entry.job_id === jobId;
+        });
+    	for (node of jobs["nodes"]) {
+      		var iframe = document.createElement('iframe');
+      		iframe.width="675"
+      		iframe.height="300"
+      		iframe.setAttribute('frameborder', '0')
+      		iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts')
+		iframe.src = `https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id=${jobId}&var-node=${node}&from=${job['time']['start']*1000}&to=${job['time']['end']*1000}&theme=light&refresh=30s&panelId=14`
+		container.appendChild(iframe);
+    }
+  }
+</script>
+<div>
+  <h3 style="margin-top:20px;">Job History<small> Resource Usage of Past Jobs</small></h3>
+  <span>Select job:</span>
+  {% for job in jobs["jobs"] %}
+    <p> {{ job | tojson(indent=2)}} </p>
+  {% endfor %}
+  <iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id={{ jobs['jobs'][0]['job_id'] }}&var-node={{ jobs['jobs'][0]['nodes'] }}&from={{ jobs['jobs'][0]['time']['start']*1000 }}&to={{ jobs['jobs'][0]['time']['end']*1000 }}&theme=light&refresh=30s&panelId=14" width="450" height="300" frameborder="0"></iframe>
+  <div id="grafanaJobPlots" onload="updateGrafanaJobIframes(1516063)"></div>
+</div>
