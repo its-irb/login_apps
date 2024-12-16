@@ -1,6 +1,6 @@
 ---
 name: DCV
-icon: fa://desktop
+icon: icon.png
 category: Jobs
 subcategory: Desktops
 role: batch_connect
