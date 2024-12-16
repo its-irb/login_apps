@@ -8,18 +8,18 @@ script:
   native: # ... array of command line arguments ...
     - "-c"
     - "<%= cores.blank? ? 1 : cores.to_i %>"
-    - "--mem-per-cpu"
-    - "<%= memory %>"
-##    <% if gpu.to_i != 0 %>
-##    - "--gres=gpu:<%= gpu %>"
-##    <% end %>
-
+    - "--mem"
+    - "<%= memory %>G"
+    - "--job-name"
+    - "<%= job_name %>" 
+    - "--partition"
+    - "<%= partition_cpu %>"  
 batch_connect:
   template: vnc
   websockify_cmd: '/usr/bin/websockify'
   script_wrapper: |
     cat << "CTRSCRIPT" > container.sh
-    export PATH="$PATH:/opt/TurboVNC/bin"
+    export PATH="/opt/TurboVNC/bin:$PATH"
     %s  
     CTRSCRIPT
 

@@ -13,6 +13,10 @@ attributes:
   bc_vnc_resolution:
     required: true
   node_type: null
+  job_name:
+    widget: "text_field"
+    value: ""
+    label: "Job Name"
   cores:
     widget: "number_field"
     max: 64
@@ -23,20 +27,29 @@ attributes:
     help: "Enter a value between 1 and 64"
   memory:
     widget: "number_field"
-    max: 16000
-    min: 100
+    max: 248
+    min: 1
     step: 1
-    value: 1024
-    label: "Memory per core (MB)"
-    help: "Enter a value in MB between 100 and 16000"
- # gpu:
- #  widget: "number_field"      
- #  max: 0
- #  min: 0
- #  step: 0
- #  value: 0
- #  label: "Number of GPUs"  
- #  help: "Ask for GPU if you need (temporary not available)"
+    value: 1
+    label: "Total memory in GB"
+    help: "Enter a value in GB between 1 and 248"
+  partition_cpu:
+    widget: select
+    label: "Partition"
+    options:
+     - [
+         'irb_cpu_iclk', 'irb_cpu_iclk'
+       ]
+     - [
+         'irb_cpu_sphr', 'irb_cpu_sphr'
+       ]
+     - [
+         'irb_cpu_zen4', 'irb_cpu_zen4'
+       ]
+     - [
+         'spot_cpu', 'spot_cpu',
+       ]
+    help: "Choose a hardware partition"
 
 form:
   - bc_vnc_idle
@@ -48,11 +61,10 @@ form:
 #  - bc_queue
   - bc_vnc_resolution
 #  - bc_email_on_started
+  - job_name
   - cores
   - memory
-#  - gpu  
-
-
+  - partition_cpu
 
 
 
