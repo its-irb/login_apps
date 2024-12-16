@@ -39,13 +39,13 @@
 
     <div class="card-body">
 	<div style="display: block;">
-	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=14" width="450" height="300" frameborder="0"></iframe>
-	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=17" width="450" height="300" frameborder="0"></iframe>
+	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job?orgId=2&var-prom_ds=Prometheus&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=14" width="450" height="300" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
+	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job?orgId=2&var-prom_ds=Prometheus&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=17" width="450" height="300" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
 	</div>
 	<% if node.start_with?('irbgcn') %>
 	<div style="display: block;">
-	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=24" width="450" height="300" frameborder="0"></iframe>
-        <iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job-ok?orgId=2&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=25" width="450" height="300" frameborder="0"></iframe>
+	<iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job?orgId=2&var-prom_ds=Prometheus&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=24" width="450" height="300" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
+        <iframe src="https://grafana.irbbarcelona.pcb.ub.es/d-solo/4E3iICjSk/resources-usage-per-job?orgId=2&var-prom_ds=Prometheus&var-job_id=<%= data.pbsid %>&var-node=<%= node %>&from=<%= data.starttime*1000 %>&to=now&theme=light&refresh=30s&panelId=25" width="450" height="300" frameborder="0" sandbox="allow-same-origin allow-scripts"></iframe>
 	</div>
 	<% end %>
     </div>
