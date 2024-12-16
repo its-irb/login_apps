@@ -1,0 +1,7 @@
+name: Monitoring
+category: Jobs
+description: |-
+  View current use of the cluster partitions.
+icon: fa://chart-line
+url: custom/monitoring
+new_window: false
