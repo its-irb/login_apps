@@ -1,0 +1,20 @@
+---
+script:
+  native: # ... array of command line arguments ...
+    - "--job-name"
+    - "<%= job_name %>" 
+    - "-N"
+    - "1" 
+    - "--ntasks"
+    - "1"
+    - "--partition"
+    - "<%= partition %>"
+    - "--distribution=block:block:block"   
+    - "--cpus-per-task"
+    - "<%= cores.blank? ? 1 : cores.to_i %>"  
+    - "--mem"
+    - "<%= memory %>G"
+    - "<%= is_interactive == 'interactive' ? '--qos=interactive' : '--qos=' %>"   
+
+batch_connect:
+  template: "basic"

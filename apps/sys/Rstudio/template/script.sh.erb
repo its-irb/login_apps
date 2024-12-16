@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+####module load R
+module purge
+# Load the required environment
+setup_env () {
+  # Additional environment which could be moved into a module
+
+  #export RSTUDIO_SERVER_IMAGE="/apps/singularity/ood_images/rstudio_4.3.1.sif"
+  #export RSTUDIO_SERVER_IMAGE="/scratch/shared/ood_images/irb-ood"
+  export APPS="/apps"
+  export DATA="/data"
+  export SINGULARITYENV_PREPEND_PATH=${PATH}
+
+  #export APPTAINER_BINDPATH="/shared/software,/NAS01,/data"
+  export APPTAINER_BINDPATH="/shared/software,/NAS01"
+  export APPTAINERENV_PATH="$PATH"
+  export APPTAINERENV_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+  export RSTUDIO_RUN_TMPDIR=$(mktemp -d)
+  export RSTUDIO_DB_TMPDIR=$(mktemp -d)
+  export APPTAINERENV_USER=${USER}
+  export APPTAINERENV_RSTUDIO_PASSWORD=${RSTUDIO_PASSWORD}
+
+
+}
+setup_env
+
+#
+# Start RStudio Server
+#
+
+# PAM auth helper used by RStudio
+export RSTUDIO_AUTH="${PWD}/bin/auth"
+
+# Generate an `rsession` wrapper script
+export RSESSION_LOG_FILE=${HOME}/rsession.log
+touch ${RSESSION_LOG_FILE}
+export RSESSION_WRAPPER_FILE="${PWD}/rsession.sh"
+
+
+(
+umask 077
+sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
+  #!/usr/bin/env bash
+
+  # Log all output from this script
+  export RSESSION_LOG_FILE="${PWD}/rsession.log"
+
+  exec &>>"\${RSESSION_LOG_FILE}"
+
+  # Launch the original command
+  echo "Launching rsession..."
+  set -x
+  exec rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+EOL
+)
+chmod 700 "${RSESSION_WRAPPER_FILE}"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+export TMPDIR="$(mktemp -d)"
+
+mkdir -p "$TMPDIR/rstudio-server"
+module load Anaconda3
+python -c 'from uuid import uuid4; print(uuid4())' > "$TMPDIR/rstudio-server/secure-cookie-key"
+module purge
+chmod 0600 "$TMPDIR/rstudio-server/secure-cookie-key"
+
+set -x
+# Launch the RStudio Server
+echo "Starting up rserver..."
+
+###export HOME='<%= context.working_directory %>'
+
+echo "<%= context.any? { |element| element.to_s.include?("irb_cpu_iclk") } ? 'true' : 'false' %>"
+
+virtualNetworkUsers=("rmartinezp" "avaquer")
+
+if <%= context.any? { |element| element.to_s.include?('irb_cpu_iclk') } ? 'true' : 'false' %>; then
+	for user in "${virtualNetworkUsers[@]}"; do
+		if [[ $(whoami) == $user ]]; then
+			export SINGULARITY_UNSHARE_NET=true
+			export SINGULARITY_NETWORK_ARGS="portmap=${port}:${port}/tcp"
+		fi
+	done
+fi
+
+
+singularity exec --env PATH=/usr/lib/rstudio-server/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -B "$TMPDIR:/tmp" -H '<%= context.working_directory %>' -B ${APPS}:/apps -B $HOME -B /scratch:/scratch -B ${DATA}:/data -B ${RSTUDIO_RUN_TMPDIR}:/run/rstudio-server -B ${RSTUDIO_DB_TMPDIR}:/var/lib/rstudio-server -B /sys/fs/cgroup:/sys/fs/cgroup:ro <%= context.container_value %> \
+        /usr/lib/rstudio-server/bin/rserver \
+        --www-port ${port} \
+        --auth-none 1 \
+        --server-user $USER \
+        --auth-pam-helper-path "${RSTUDIO_AUTH}" \
+        --auth-encrypt-password 0 \
+        --secure-cookie-key-file /tmp/rstudio-server/secure-cookie-key \
+        --rsession-path "${RSESSION_WRAPPER_FILE}" \
+        --rsession-proxy-max-wait-secs 120
+
+
+echo $(whoami)
+
+echo 'Singularity as exited...'
+
