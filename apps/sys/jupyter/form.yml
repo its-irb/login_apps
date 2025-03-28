@@ -82,13 +82,14 @@ attributes:
          'interactive', 'interactive',
          data-max-cores: 16,
          data-max-memory: 256,
-         data-max-bc-num-hours: 24,
+         data-max-bc-num-hours: 9999999,
          data-max-bc-num-gpu: 1
        ]
      - [
-         'regular', 'regular'
+         'regular', 'regular',
+         data-max-bc-num-hours: 720
        ]
-    help: "Run with _interactive_ QoS (more priority but constrained resources: 16 cores, 1 GPU, max_mem= 256G and 24h of timelimit)"
+    help: "Run with _interactive_ QoS (more priority but constrained resources: 16 cores, 1 GPU, max_mem=256G)"
 
   num_gpu:
     widget: "number_field"
@@ -105,13 +106,13 @@ attributes:
     options:
      - [
          'irb_gpu_3090', 'irb_gpu_3090',
-         data-max-cores: 8,
-         data-max-memory: 40
+         data-max-cores: 5,
+         data-max-memory: 208
        ]
      - [
          'spot_gpu', 'spot_gpu',
          data-max-cores: 8,
-         data-max-memory: 40
+         data-max-memory: 208
        ]
      - [
          'sbnb_gpu_3090', 'sbnb_gpu_3090',
@@ -126,17 +127,7 @@ attributes:
     label: "Partition"
     options:
      - [
-         'irb_cpu_iclk', 'irb_cpu_iclk',
-         data-max-cores: 32,
-         data-max-memory: 512
-       ]
-     - [
-         'irb_cpu_sphr', 'irb_cpu_sphr',
-         data-max-cores: 64,
-         data-max-memory: 496
-       ]
-     - [
-         'irb_cpu_zen4', 'irb_cpu_zen4',
+         'irb', 'irb_pool1,irb_pool2,irb_pool3,irb_pool4,irb_pool5,irb_pool6',
          data-max-cores: 96,
          data-max-memory: 2048
        ]
@@ -148,7 +139,7 @@ attributes:
      - [
          'spot_cpu', 'spot_cpu',
          data-max-cores: 96,
-         data-max-memory: 1112
+         data-max-memory: 2048
        ]
      - [
          'sbnb_cpu_zen3', 'sbnb_cpu_zen3',
@@ -181,6 +172,15 @@ attributes:
     label: "Total memory (GB)"
     help: "Total memory in GB you want to allocate"
     
+  user_site:
+    widget: select
+    label: "Enable user site packages (~/.local/)?"
+    help: "Select 'No' to prevent Python from using packages installed in ~/.local/, ensuring a clean environment."
+    options:
+      - [ "yes", "yes" ]
+      - [ "no", "no" ] 
+    value: "yes"
+    
 form:
   - modules
   - extra_jupyter_args
@@ -199,4 +199,5 @@ form:
   - partition_gpu
   - partition_cpu  
   - cores
-  - memory 
+  - memory
+  - user_site 

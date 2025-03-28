@@ -27,7 +27,6 @@ module purge
 #source /etc/profile.d/z00-lmod.sh
 #module load anaconda3/2023.09-0-yjzjr4h
 module load Anaconda3
-
 # List loaded modules
 module list
  <%- end -%>
@@ -39,9 +38,14 @@ module list
  
   set -ux
   <% if context.is_gpu == 'yes' %>
-	  singularity exec --nv -H '<%= context.working_dir %>'  -B $HOME -B /home/bbg -B /home/mmb -B /aloy -B /home/sbnb -B /scratch  -B /data:/data -B /apps:/apps <%= context.container_value %> jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
-  <%- else -%> 
-	  singularity exec -H '<%= context.working_dir %>'  -B $HOME -B /home/bbg -B /home/mmb -B /aloy -B /home/sbnb -B /scratch  -B /data:/data -B /apps:/apps <%= context.container_value %> jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+	  SINGULARITY_BIND="/home/sbnb:/aloy/home,/data/sbnb/data:/aloy/data,/data/sbnb/scratch:/aloy/scratch,/data/sbnb/chemicalchecker:/aloy/web_checker,/data/sbnb/web_updates:/aloy/web_repository" singularity exec --nv -H '<%= context.working_dir %>'  -B $HOME -B /home/bbg -B /home/mmb -B /home/sbnb -B /data:/data -B /apps:/apps <%= context.container_value %> jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+  <%- else -%>
+	  <% if context.user_site == 'yes' %> 
+		  SINGULARITY_BIND="/home/sbnb:/aloy/home,/data/sbnb/data:/aloy/data,/data/sbnb/scratch:/aloy/scratch,/data/sbnb/chemicalchecker:/aloy/web_checker,/data/sbnb/web_updates:/aloy/web_repository" singularity exec -H '<%= context.working_dir %>'  -B $HOME -B /home/bbg -B /home/mmb -B /home/sbnb -B /data:/data -B /apps:/apps <%= context.container_value %> jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+          <% else %>
+		  SINGULARITYENV_PYTHONNOUSERSITE=1 SINGULARITY_BIND="/home/sbnb:/aloy/home,/data/sbnb/data:/aloy/data,/data/sbnb/scratch:/aloy/scratch,/data/sbnb/chemicalchecker:/aloy/web_checker,/data/sbnb/web_updates:/aloy/web_repository" singularity exec -H '<%= context.working_dir %>'  -B $HOME -B /home/bbg -B /home/mmb -B /home/sbnb -B /data:/data -B /apps:/apps <%= context.container_value %> jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
+          <% end %>
+  
   <% end %>  
 
 <%- end -%>

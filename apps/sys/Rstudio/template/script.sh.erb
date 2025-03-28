@@ -87,7 +87,7 @@ if <%= context.any? { |element| element.to_s.include?('irb_cpu_iclk') } ? 'true'
 fi
 
 
-singularity exec --env PATH=/usr/lib/rstudio-server/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -B "$TMPDIR:/tmp" -H '<%= context.working_directory %>' -B ${APPS}:/apps -B $HOME -B /scratch:/scratch -B ${DATA}:/data -B ${RSTUDIO_RUN_TMPDIR}:/run/rstudio-server -B ${RSTUDIO_DB_TMPDIR}:/var/lib/rstudio-server -B /sys/fs/cgroup:/sys/fs/cgroup:ro <%= context.container_value %> \
+singularity exec --env PATH=/usr/lib/rstudio-server/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -B "$TMPDIR:/tmp" -H '<%= context.working_directory %>' -B ${APPS}:/apps -B $HOME -B ${DATA}:/data -B ${RSTUDIO_RUN_TMPDIR}:/run/rstudio-server -B ${RSTUDIO_DB_TMPDIR}:/var/lib/rstudio-server -B /sys/fs/cgroup:/sys/fs/cgroup:ro <%= context.container_value %> \
         /usr/lib/rstudio-server/bin/rserver \
         --www-port ${port} \
         --auth-none 1 \

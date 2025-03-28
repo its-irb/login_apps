@@ -1,20 +1,26 @@
 ---
 
-script:
+script: 
   native: # ... array of command line arguments ...
     - "--job-name"
-    - "<%= job_name %>" 
+    - "dcv-<%= job_name %>"  
     - "-N"
-    - "1" 
-    - "--ntasks"
     - "1"
-    - "--partition=irb_cpu_iclk"
+    <% if is_gpu == 'yes' %>
+    - "--gres=gpu:1"
+    <% end %>  
+    - "--partition"
+    - "<%= is_gpu == 'yes' ? partition_gpu : partition_cpu %>"
     - "--distribution=block:block:block"   
     - "--cpus-per-task"
     - "<%= cores.blank? ? 1 : cores.to_i %>"  
     - "--mem"
-    - "<%= memory %>G"
-    - "--qos=interactive"   
+    - "<%= memory %>G" 
+    - "<%= is_interactive == 'interactive' ? '--qos=interactive' : '--qos=' %>"
+    <% excluded_nodes = `squeue -u #{ENV['USER']} -o "%.8j %.9P %.6D %R" | awk '$1 ~ /^dcv-/ {print $NF}' | grep -v '(null)' | tr '\\n' ',' | sed 's/,$//'`.strip %>
+    <% if !excluded_nodes.empty? %>
+    - "--exclude=<%= excluded_nodes %>"
+    <% end %>
 
 batch_connect:
     template: "basic"

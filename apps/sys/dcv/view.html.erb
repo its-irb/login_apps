@@ -4,7 +4,7 @@
     Run the following command in your terminal, log in, and then launch DCV with the connect button.
   </p>
   <pre><code id="codeBlock" style="font-size: smaller;">
-    ssh -J irblogin01.irbbarcelona.pcb.ub.es -L 8443:localhost:8443 <%= host %>
+    ssh -J <%= "#{ENV['USER']}" %>@irblogin01.irbbarcelona.pcb.ub.es -L 8443:localhost:8443 <%= "#{ENV['USER']}" %>@<%= host %>
   </code>
   <!--<button id="copyButton"><i class="fa fa-copy"></i></button>-->
   </pre>

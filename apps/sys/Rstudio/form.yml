@@ -39,12 +39,14 @@ attributes:
      - [
          'interactive', 'interactive',
          data-max-cores: 16,
-         data-max-memory: 256
+         data-max-memory: 256,
+         data-max-bc-num-hours: 9999999
        ]
      - [
          'regular', 'regular',
-         data-max-cores: 32,
-         data-max-memory: 512
+         data-max-bc-num-hours: 720
+         #    data-max-cores: 32,
+         #  data-max-memory: 512
        ]
     help: "Run with _interactive_ QoS (more priority, constrained resources)"
 
@@ -53,22 +55,14 @@ attributes:
     label: "Partition"
     options:
      - [
-         'irb_cpu_iclk', 'irb_cpu_iclk'
-       ]
-     - [
-         'irb_cpu_sphr', 'irb_cpu_sphr',
-         data-max-cores: 64,
-         data-max-memory: 496
-       ]
-     - [
-         'irb_cpu_zen4', 'irb_cpu_zen4',
+         'irb', 'irb_pool1,irb_pool2,irb_pool3,irb_pool4,irb_pool5,irb_pool6',
          data-max-cores: 96,
          data-max-memory: 2048
        ]
      - [
          'spot_cpu', 'spot_cpu',
          data-max-cores: 96,
-         data-max-memory: 1112
+         data-max-memory: 2048
        ]
     help: "Choose a hardware partition"
 
